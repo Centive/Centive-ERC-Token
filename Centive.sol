@@ -8,25 +8,25 @@ pragma solidity ^0.4.22;
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a * b;
-        assert(a == 0 || c / a == b);
+        require(a == 0 || c / a == b);
         return c;
     }
 
     function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        // assert(b > 0); // Solidity automatically throws when dividing by 0
+        // require(b > 0); // Solidity automatically throws when dividing by 0
         uint256 c = a / b;
-        // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+        // require(a == b * c + a % b); // There is no case in which this doesn't hold
         return c;
     }
 
     function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        assert(b <= a);
+        require(b <= a);
         return a - b;
     }
 
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a + b;
-        assert(c >= a);
+        require(c >= a);
         return c;
     }
 }
@@ -81,12 +81,12 @@ contract Haltable is Ownable {
     bool public halted;
 
     modifier inNormalState {
-        assert(!halted);
+        require(!halted);
         _;
     }
 
     modifier inEmergencyState {
-        assert(halted);
+        require(halted);
         _;
     }
 
@@ -244,6 +244,7 @@ contract Burnable is StandardToken {
         totalSupply = totalSupply.sub(_value);
         // Updates totalSupply
         emit Burn(msg.sender, _value);
+        emit Transfer(msg.sender, address(0), _value);
         return true;
     }
 
@@ -258,6 +259,7 @@ contract Burnable is StandardToken {
         // Updates totalSupply
         allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value);
         emit Burn(_from, _value);
+        emit Transfer(_from, address(0), _value);
         return true;
     }
 
